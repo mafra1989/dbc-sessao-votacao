@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,6 +18,7 @@ public class SessaoDomain {
 
     private Long id;
     private Integer tempoVotacao;
+    private LocalDateTime terminoVotacao;
     private Long quantidadeVotos;
     private Long sim;
     private Long nao;
@@ -24,6 +28,8 @@ public class SessaoDomain {
         if(tempoVotacao == null) {
             tempoVotacao = 1;
         }
+
+        terminoVotacao = LocalDateTime.now().plusMinutes(tempoVotacao);
     }
 
     public void changePauta(PautaDomain pautaDomain) {
@@ -40,6 +46,11 @@ public class SessaoDomain {
 
     public void changeTotalVotosNao(Long votosNao) {
         nao = votosNao;
+    }
+
+    public Boolean verficaTerminoVotocao() {
+        long diff = Duration.between(LocalDateTime.now(), terminoVotacao).getSeconds();
+        return diff > 0;
     }
 
 }

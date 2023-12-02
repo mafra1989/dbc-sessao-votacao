@@ -6,7 +6,6 @@ import br.com.dbc.domain.model.enumerators.MensagensNegociosEnum;
 import br.com.dbc.domain.port.output.ConsultaExternaOutPort;
 import br.com.dbc.infrastructure.adapter.output.rest.entity.CpfResponseEntity;
 import br.com.dbc.infrastructure.adapter.output.rest.service.CpfFeignClientService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +32,8 @@ public class ConsultaExternaRestAdapter implements ConsultaExternaOutPort {
             log.info(LOG_URL_GET.replace("{0}", profile.getUriRunMockyCpf()));
             cpfResponseEntity = cpfFeignClientService.consultaCpf(cpf);
         } catch (FeignException ex) {
-            throw new CpfFeignException(MensagensNegociosEnum.ERRO_INTERNO.getCodigo(),
-                    MensagensNegociosEnum.ERRO_INTERNO.getMensagem());
+            throw new CpfFeignException(MensagensNegociosEnum.ERRO_SERVICO_EXTERNO.getCodigo(),
+                    MensagensNegociosEnum.ERRO_SERVICO_EXTERNO.getMensagem());
         }
 
         return cpfResponseEntity.getBody().getStatus();

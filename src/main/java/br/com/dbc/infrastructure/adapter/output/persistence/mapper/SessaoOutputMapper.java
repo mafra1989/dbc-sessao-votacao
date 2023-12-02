@@ -9,9 +9,11 @@ import org.mapstruct.Mapping;
 public interface SessaoOutputMapper {
 
 	@Mapping(target = "id", source = "id")
+	@Mapping(target = "terminoVotacao", source = "terminoVotacao")
 	@Mapping(target = "pautaDomain.id", source = "pautaId")
 	SessaoDomain toDomain(SessaoEntity entity);
 
+	@Mapping(target = "terminoVotacao", source = "terminoVotacao")
 	@Mapping(target = "pautaId", source = "pautaDomain.id")
 	SessaoEntity toEntity(SessaoDomain domain);
 
