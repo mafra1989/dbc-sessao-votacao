@@ -18,8 +18,7 @@ public class ApiErroResponse {
     private String message;
 
     private HttpStatus status;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy - hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy - HH:mm:ss")
     private LocalDateTime timeStamp = LocalDateTime.now();
 
     private List<ApiSubErroResponse> errors;

@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -23,6 +25,9 @@ public class SessaoEntity {
 
     @Column
     private Integer tempoVotacao;
+
+    @Column
+    private LocalDateTime terminoVotacao;
 
     @Column
     private Long pautaId;
