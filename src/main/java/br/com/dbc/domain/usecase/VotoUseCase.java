@@ -1,5 +1,6 @@
 package br.com.dbc.domain.usecase;
 
+import br.com.dbc.domain.exception.TempoVotacaoExcedidoException;
 import br.com.dbc.domain.exception.ValidationException;
 import br.com.dbc.domain.exception.VotoCpfExistenteNaPautaException;
 import br.com.dbc.domain.model.SessaoDomain;
@@ -41,6 +42,13 @@ public class VotoUseCase implements VotoInPort {
         pautaOutPort.consultarPauta(pautaId);
 
         SessaoDomain sessaoDomain = sessaoOutPort.consultarSessao(sessaoId, pautaId);
+
+        Boolean sessaoAtiva = sessaoDomain.verficaTerminoVotocao();
+        if(!sessaoAtiva) {
+            throw new TempoVotacaoExcedidoException(
+                    MensagensNegociosEnum.TEMPO_VOTACAO_EXCEDIDO.getCodigo(),
+                    MensagensNegociosEnum.TEMPO_VOTACAO_EXCEDIDO.getMensagem());
+        }
 
         Optional<VotoDomain> voto = votoOutPort.consultarVotoPorPauta(votoDomain.getCpf(), pautaId);
         if(voto.isPresent()) {
