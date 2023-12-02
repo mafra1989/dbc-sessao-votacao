@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -21,14 +22,8 @@ public class VotoPersistenceAdapter implements VotoOutPort {
     @Autowired
     private VotoOutputMapper mapper;
 
-
     @Override
-    public VotoDomain salvarVoto(VotoDomain domain) {
-        return mapper.toDomain(repository.save(mapper.toEntity(domain)));
-    }
-
-    @Override
-    public List<VotoDomain> consultarVotosPorSessao(Long sessaoId) {
+    public List<VotoDomain> listarVotosPorSessao(Long sessaoId) {
         List<VotoEntity> entities = repository.findAllBySessaoId(sessaoId);
 
         List<VotoDomain> votos = new ArrayList<VotoDomain>();
@@ -37,4 +32,21 @@ public class VotoPersistenceAdapter implements VotoOutPort {
         }
         return votos;
     }
+
+    @Override
+    public VotoDomain salvarVoto(VotoDomain domain) {
+        return mapper.toDomain(repository.save(mapper.toEntity(domain)));
+    }
+
+    @Override
+    public Optional<VotoDomain> consultarVotoPorPauta(String cpf, Long pautaId) {
+        Optional<VotoEntity> entity = repository.findByCpfAndPautaId(cpf, pautaId);
+
+        if(entity.isPresent()) {
+            return Optional.ofNullable(mapper.toDomain(entity.get()));
+        }
+
+        return Optional.empty();
+    }
+
 }

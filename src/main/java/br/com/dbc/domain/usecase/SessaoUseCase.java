@@ -27,6 +27,8 @@ public class SessaoUseCase implements SessaoInPort {
 
     @Override
     public List<SessaoDomain> listarSessoes(Long pautaId) {
+        pautaOutPort.consultarPauta(pautaId);
+
         return sessaoOutPort.listarSessoes(pautaId);
     }
 
@@ -42,9 +44,11 @@ public class SessaoUseCase implements SessaoInPort {
 
     @Override
     public SessaoDomain consultarSessao(Long sessaoId, Long pautaId) {
+        pautaOutPort.consultarPauta(pautaId);
+
         SessaoDomain sessaoDomain = sessaoOutPort.consultarSessao(sessaoId, pautaId);
 
-        List<VotoDomain> votos = votoOutPort.consultarVotosPorSessao(sessaoId);
+        List<VotoDomain> votos = votoOutPort.listarVotosPorSessao(sessaoId);
 
         long quantidadeVotos = votos.stream().count();
         sessaoDomain.changeTotalVotos(quantidadeVotos);

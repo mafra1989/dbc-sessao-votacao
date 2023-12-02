@@ -11,6 +11,7 @@ public interface SessaoInputMapper {
 
 	SessaoDomain toDomain(SessaoDtoRequest request);
 
+	@Mapping(target = "terminoVotacao", source = "terminoVotacao")
 	@Mapping(target = "pautaId", source = "pautaDomain.id")
 	SessaoDtoResponse toResponseDto(SessaoDomain domain);
 
