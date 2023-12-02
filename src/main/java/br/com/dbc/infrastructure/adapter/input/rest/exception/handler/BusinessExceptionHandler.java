@@ -1,5 +1,7 @@
 package br.com.dbc.infrastructure.adapter.input.rest.exception.handler;
 
+import br.com.dbc.domain.exception.CpfFeignException;
+import br.com.dbc.domain.exception.CpfInvalidoException;
 import br.com.dbc.domain.exception.OpcaoInvalidaException;
 import br.com.dbc.domain.exception.PautaNotFoundException;
 import br.com.dbc.domain.exception.SessaoNotFoundException;
@@ -118,9 +120,43 @@ public class BusinessExceptionHandler {
         return baseDtoResponse;
     }
 
+    @ExceptionHandler(CpfInvalidoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public BaseDtoResponse handleCpfInvalidoException(CpfInvalidoException ex){
+
+        ApiErroResponse error = new ApiErroResponse(MensagenInfraestruturaEnum.FALHA_PROCESSAMENTO.getMensagem(), HttpStatus.BAD_REQUEST, ex);
+        var messages = ex.getErrorMessage().split("/");
+        for (String message: messages) {
+            error.addErroNegocio(ex.getErrorCode(), message);
+        }
+
+        BaseDtoResponse baseDtoResponse = new BaseDtoResponse<DadosVotacaoDtoResponse>();
+        baseDtoResponse.setApiVersion("v1");
+        baseDtoResponse.setData(error);
+
+        return baseDtoResponse;
+    }
+
     @ExceptionHandler(TempoVotacaoExcedidoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public BaseDtoResponse handleTempoVotacaoExcedidoException(TempoVotacaoExcedidoException ex){
+
+        ApiErroResponse error = new ApiErroResponse(MensagenInfraestruturaEnum.FALHA_PROCESSAMENTO.getMensagem(), HttpStatus.BAD_REQUEST, ex);
+        var messages = ex.getErrorMessage().split("/");
+        for (String message: messages) {
+            error.addErroNegocio(ex.getErrorCode(), message);
+        }
+
+        BaseDtoResponse baseDtoResponse = new BaseDtoResponse<DadosVotacaoDtoResponse>();
+        baseDtoResponse.setApiVersion("v1");
+        baseDtoResponse.setData(error);
+
+        return baseDtoResponse;
+    }
+
+    @ExceptionHandler(CpfFeignException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseDtoResponse handleCpfFeignException(CpfFeignException ex){
 
         ApiErroResponse error = new ApiErroResponse(MensagenInfraestruturaEnum.FALHA_PROCESSAMENTO.getMensagem(), HttpStatus.BAD_REQUEST, ex);
         var messages = ex.getErrorMessage().split("/");

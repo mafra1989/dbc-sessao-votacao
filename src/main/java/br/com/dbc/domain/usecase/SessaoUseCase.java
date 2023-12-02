@@ -36,8 +36,8 @@ public class SessaoUseCase implements SessaoInPort {
     public SessaoDomain criarSessao(Long pautaId, SessaoDomain sessaoDomain) {
         PautaDomain pautaDomain = pautaOutPort.consultarPauta(pautaId);
 
-        sessaoDomain.changeTempoVotacao();
         sessaoDomain.changePauta(pautaDomain);
+        sessaoDomain.changeTempoVotacao();
 
         return sessaoOutPort.salvarSessao(sessaoDomain);
     }

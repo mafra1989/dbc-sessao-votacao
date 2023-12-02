@@ -73,6 +73,18 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
 			<version>${org.projectlombok.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<version>3.1.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>br.com.six2six</groupId>
+			<artifactId>fixture-factory</artifactId>
+			<version>${fixture-factory.version}</version>
         </dependency>
 	</dependencies>
 

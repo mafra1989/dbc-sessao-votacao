@@ -1,15 +1,18 @@
 package br.com.dbc.domain.usecase;
 
+import br.com.dbc.domain.exception.CpfInvalidoException;
 import br.com.dbc.domain.exception.TempoVotacaoExcedidoException;
 import br.com.dbc.domain.exception.ValidationException;
 import br.com.dbc.domain.exception.VotoCpfExistenteNaPautaException;
 import br.com.dbc.domain.model.SessaoDomain;
 import br.com.dbc.domain.model.VotoDomain;
 import br.com.dbc.domain.model.enumerators.MensagensNegociosEnum;
+import br.com.dbc.domain.model.enumerators.StatusEnum;
 import br.com.dbc.domain.model.enumerators.VotoEnum;
 import br.com.dbc.domain.port.input.ValidacoesInput;
 import br.com.dbc.domain.port.input.VotoInPort;
 import br.com.dbc.domain.port.output.PautaOutPort;
+import br.com.dbc.domain.port.output.ConsultaExternaOutPort;
 import br.com.dbc.domain.port.output.SessaoOutPort;
 import br.com.dbc.domain.port.output.VotoOutPort;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,9 @@ public class VotoUseCase implements VotoInPort {
     @Autowired
     private ValidacoesInput validations;
 
+    @Autowired
+    private ConsultaExternaOutPort consultaExternaOutPort;
+
     @Override
     public VotoDomain registrarVoto(Long pautaId, Long sessaoId, VotoDomain votoDomain) {
         Optional<StringBuilder> result = validations.execute(votoDomain);
@@ -43,6 +49,14 @@ public class VotoUseCase implements VotoInPort {
 
         SessaoDomain sessaoDomain = sessaoOutPort.consultarSessao(sessaoId, pautaId);
 
+        String status = consultaExternaOutPort.consultaCpf(votoDomain.getCpf());
+        if(StatusEnum.UNABLE_TO_VOTE == StatusEnum.obterStatus(status.toUpperCase())) {
+            throw new CpfInvalidoException(
+                    MensagensNegociosEnum.CPF_INVALIDO.getCodigo(),
+                    MensagensNegociosEnum.CPF_INVALIDO.getMensagem()
+            );
+        }
+
         Boolean sessaoAtiva = sessaoDomain.verficaTerminoVotocao();
         if(!sessaoAtiva) {
             throw new TempoVotacaoExcedidoException(
@@ -50,8 +64,8 @@ public class VotoUseCase implements VotoInPort {
                     MensagensNegociosEnum.TEMPO_VOTACAO_EXCEDIDO.getMensagem());
         }
 
-        Optional<VotoDomain> voto = votoOutPort.consultarVotoPorPauta(votoDomain.getCpf(), pautaId);
-        if(voto.isPresent()) {
+        Optional<VotoDomain> votoPauta = votoOutPort.consultarVotoPorPauta(votoDomain.getCpf(), pautaId);
+        if(votoPauta.isPresent()) {
             throw new VotoCpfExistenteNaPautaException(
                     MensagensNegociosEnum.VOTO_CPF_EXISTENTE_NA_PAUTA.getCodigo(),
                     MensagensNegociosEnum.VOTO_CPF_EXISTENTE_NA_PAUTA.getMensagem());
