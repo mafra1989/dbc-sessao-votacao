@@ -25,6 +25,12 @@ public class VotoEntity {
     private String opcao;
 
     @Column
+    private String cpf;
+
+    @Column
     private Long sessaoId;
+
+    @Column
+    private Long pautaId;
 
 }

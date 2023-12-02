@@ -1,10 +1,10 @@
 package br.com.dbc.infrastructure.adapter.input.rest.exception.handler;
 
-import br.com.dbc.domain.exception.CpfInvalidoException;
 import br.com.dbc.domain.exception.OpcaoInvalidaException;
 import br.com.dbc.domain.exception.PautaNotFoundException;
 import br.com.dbc.domain.exception.SessaoNotFoundException;
 import br.com.dbc.domain.exception.ValidationException;
+import br.com.dbc.domain.exception.VotoCpfExistenteNaPautaException;
 import br.com.dbc.infrastructure.adapter.input.rest.dto.BaseDtoResponse;
 import br.com.dbc.infrastructure.adapter.input.rest.dto.response.DadosVotacaoDtoResponse;
 import br.com.dbc.infrastructure.adapter.input.rest.exception.enumarator.MensagenInfraestruturaEnum;
@@ -100,11 +100,11 @@ public class BusinessExceptionHandler {
         return baseDtoResponse;
     }
 
-    @ExceptionHandler(CpfInvalidoException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public BaseDtoResponse handleCpfInvalidoException(CpfInvalidoException ex){
+    @ExceptionHandler(VotoCpfExistenteNaPautaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseDtoResponse handleVotoCpfExistenteNaPautaException(VotoCpfExistenteNaPautaException ex){
 
-        ApiErroResponse error = new ApiErroResponse(MensagenInfraestruturaEnum.FALHA_PROCESSAMENTO.getMensagem(), HttpStatus.NOT_FOUND, ex);
+        ApiErroResponse error = new ApiErroResponse(MensagenInfraestruturaEnum.FALHA_PROCESSAMENTO.getMensagem(), HttpStatus.BAD_REQUEST, ex);
         var messages = ex.getErrorMessage().split("/");
         for (String message: messages) {
             error.addErroNegocio(ex.getErrorCode(), message);

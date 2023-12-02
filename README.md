@@ -1,4 +1,4 @@
-# API Gestão de Pautas e sessões de votação
+# API Gestão de pautas e sessões de votação
 
 ## Visão Geral
 Esse projeto é uma API REST que realiza a gestão de pautas e sessões de votação e promove as seguintes funcionalidades:
