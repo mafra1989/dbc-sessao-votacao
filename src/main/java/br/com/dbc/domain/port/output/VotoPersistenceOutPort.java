@@ -5,7 +5,7 @@ import br.com.dbc.domain.model.VotoDomain;
 import java.util.List;
 import java.util.Optional;
 
-public interface VotoOutPort {
+public interface VotoPersistenceOutPort {
 
     List<VotoDomain> listarVotosPorSessao(Long sessaoId);
 

@@ -3,7 +3,7 @@ package br.com.dbc.infrastructure.adapter.output.persistence.adapter;
 import br.com.dbc.domain.exception.SessaoNotFoundException;
 import br.com.dbc.domain.model.SessaoDomain;
 import br.com.dbc.domain.model.enumerators.MensagensNegociosEnum;
-import br.com.dbc.domain.port.output.SessaoOutPort;
+import br.com.dbc.domain.port.output.SessaoPersistenceOutPort;
 import br.com.dbc.infrastructure.adapter.output.persistence.entity.SessaoEntity;
 import br.com.dbc.infrastructure.adapter.output.persistence.mapper.SessaoOutputMapper;
 import br.com.dbc.infrastructure.adapter.output.persistence.repository.SessaoRepository;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class SessaoPersistenceAdapter implements SessaoOutPort {
+public class SessaoPersistenceAdapter implements SessaoPersistenceOutPort {
 
     @Autowired
     private SessaoRepository repository;

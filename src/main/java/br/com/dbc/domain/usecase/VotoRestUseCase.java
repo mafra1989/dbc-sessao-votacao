@@ -10,27 +10,27 @@ import br.com.dbc.domain.model.enumerators.MensagensNegociosEnum;
 import br.com.dbc.domain.model.enumerators.StatusEnum;
 import br.com.dbc.domain.model.enumerators.VotoEnum;
 import br.com.dbc.domain.port.input.ValidacoesInput;
-import br.com.dbc.domain.port.input.VotoInPort;
-import br.com.dbc.domain.port.output.PautaOutPort;
+import br.com.dbc.domain.port.input.VotoRestInPort;
+import br.com.dbc.domain.port.output.PautaPersistenceOutPort;
 import br.com.dbc.domain.port.output.ConsultaExternaOutPort;
-import br.com.dbc.domain.port.output.SessaoOutPort;
-import br.com.dbc.domain.port.output.VotoOutPort;
+import br.com.dbc.domain.port.output.SessaoPersistenceOutPort;
+import br.com.dbc.domain.port.output.VotoPersistenceOutPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
-public class VotoUseCase implements VotoInPort {
+public class VotoRestUseCase implements VotoRestInPort {
 
     @Autowired
-    private PautaOutPort pautaOutPort;
+    private PautaPersistenceOutPort pautaPersistenceOutPort;
 
     @Autowired
-    private SessaoOutPort sessaoOutPort;
+    private SessaoPersistenceOutPort sessaoPersistenceOutPort;
 
     @Autowired
-    private VotoOutPort votoOutPort;
+    private VotoPersistenceOutPort votoPersistenceOutPort;
 
     @Autowired
     private ValidacoesInput validations;
@@ -45,9 +45,16 @@ public class VotoUseCase implements VotoInPort {
             throw new ValidationException("DBC100", result.get().toString());
         }
 
-        pautaOutPort.consultarPauta(pautaId);
+        pautaPersistenceOutPort.consultarPauta(pautaId);
 
-        SessaoDomain sessaoDomain = sessaoOutPort.consultarSessao(sessaoId, pautaId);
+        SessaoDomain sessaoDomain = sessaoPersistenceOutPort.consultarSessao(sessaoId, pautaId);
+
+        Boolean sessaoAtiva = sessaoDomain.verficaTerminoVotocao();
+        if(!sessaoAtiva) {
+            throw new TempoVotacaoExcedidoException(
+                    MensagensNegociosEnum.TEMPO_VOTACAO_EXCEDIDO.getCodigo(),
+                    MensagensNegociosEnum.TEMPO_VOTACAO_EXCEDIDO.getMensagem());
+        }
 
         String status = consultaExternaOutPort.consultaCpf(votoDomain.getCpf());
         if(StatusEnum.UNABLE_TO_VOTE == StatusEnum.obterStatus(status.toUpperCase())) {
@@ -57,14 +64,7 @@ public class VotoUseCase implements VotoInPort {
             );
         }
 
-        Boolean sessaoAtiva = sessaoDomain.verficaTerminoVotocao();
-        if(!sessaoAtiva) {
-            throw new TempoVotacaoExcedidoException(
-                    MensagensNegociosEnum.TEMPO_VOTACAO_EXCEDIDO.getCodigo(),
-                    MensagensNegociosEnum.TEMPO_VOTACAO_EXCEDIDO.getMensagem());
-        }
-
-        Optional<VotoDomain> votoPauta = votoOutPort.consultarVotoPorPauta(votoDomain.getCpf(), pautaId);
+        Optional<VotoDomain> votoPauta = votoPersistenceOutPort.consultarVotoPorPauta(votoDomain.getCpf(), pautaId);
         if(votoPauta.isPresent()) {
             throw new VotoCpfExistenteNaPautaException(
                     MensagensNegociosEnum.VOTO_CPF_EXISTENTE_NA_PAUTA.getCodigo(),
@@ -74,6 +74,6 @@ public class VotoUseCase implements VotoInPort {
         votoDomain.changeSessao(sessaoDomain);
         votoDomain.changeVoto(VotoEnum.obterOpcao(votoDomain.getOpcao().toUpperCase()));
 
-        return votoOutPort.salvarVoto(votoDomain);
+        return votoPersistenceOutPort.salvarVoto(votoDomain);
     }
 }

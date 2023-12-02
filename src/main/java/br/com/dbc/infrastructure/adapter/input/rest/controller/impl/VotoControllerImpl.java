@@ -2,7 +2,7 @@ package br.com.dbc.infrastructure.adapter.input.rest.controller.impl;
 
 
 import br.com.dbc.domain.model.VotoDomain;
-import br.com.dbc.domain.port.input.VotoInPort;
+import br.com.dbc.domain.port.input.VotoRestInPort;
 import br.com.dbc.infrastructure.adapter.input.rest.controller.VotoController;
 import br.com.dbc.infrastructure.adapter.input.rest.dto.request.VotoDtoRequest;
 import br.com.dbc.infrastructure.adapter.input.rest.dto.response.VotoDtoResponse;
@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class VotoControllerImpl implements VotoController {
 
     @Autowired
-    private VotoInPort votoInPort;
+    private VotoRestInPort votoRestInPort;
 
     @Autowired
     private VotoInputMapper mapper;
 
     @Override
     public ResponseEntity<VotoDtoResponse> registrarVoto(Long pautaId, Long sessaoId, VotoDtoRequest request) {
-        VotoDomain votoDomain = votoInPort.registrarVoto(pautaId, sessaoId, mapper.toDomain(request));
+        VotoDomain votoDomain = votoRestInPort.registrarVoto(pautaId, sessaoId, mapper.toDomain(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponseDto(votoDomain));
     }
 }
