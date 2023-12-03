@@ -17,6 +17,7 @@ Esse projeto é uma API REST que realiza a gestão de pautas e sessões de vota�
 * MapStruct
 * FeignClient
 * Docker e Docker Compose
+* Postman
 
 ## Executando o Projeto
 
@@ -33,4 +34,6 @@ https://docs.docker.com/get-docker/
 docker ps
 ```
 Para visualizar a documentação Swagger, acesse: http://localhost:8080/swagger-ui.html
+
+
 

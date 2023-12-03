@@ -5,6 +5,7 @@ import br.com.dbc.domain.exception.CpfInvalidoException;
 import br.com.dbc.domain.exception.OpcaoInvalidaException;
 import br.com.dbc.domain.exception.PautaNotFoundException;
 import br.com.dbc.domain.exception.SessaoNotFoundException;
+import br.com.dbc.domain.exception.SessaoVotacaoAtivaException;
 import br.com.dbc.domain.exception.TempoVotacaoExcedidoException;
 import br.com.dbc.domain.exception.ValidationException;
 import br.com.dbc.domain.exception.VotoCpfExistenteNaPautaException;
@@ -157,6 +158,23 @@ public class BusinessExceptionHandler {
     @ExceptionHandler(CpfFeignException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public BaseDtoResponse handleCpfFeignException(CpfFeignException ex){
+
+        ApiErroResponse error = new ApiErroResponse(MensagenInfraestruturaEnum.FALHA_PROCESSAMENTO.getMensagem(), HttpStatus.BAD_REQUEST, ex);
+        var messages = ex.getErrorMessage().split("/");
+        for (String message: messages) {
+            error.addErroNegocio(ex.getErrorCode(), message);
+        }
+
+        BaseDtoResponse baseDtoResponse = new BaseDtoResponse<DadosVotacaoDtoResponse>();
+        baseDtoResponse.setApiVersion("v1");
+        baseDtoResponse.setData(error);
+
+        return baseDtoResponse;
+    }
+
+    @ExceptionHandler(SessaoVotacaoAtivaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseDtoResponse handleSessaoVotacaoAtivaException(SessaoVotacaoAtivaException ex){
 
         ApiErroResponse error = new ApiErroResponse(MensagenInfraestruturaEnum.FALHA_PROCESSAMENTO.getMensagem(), HttpStatus.BAD_REQUEST, ex);
         var messages = ex.getErrorMessage().split("/");
