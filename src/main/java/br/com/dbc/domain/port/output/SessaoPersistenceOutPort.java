@@ -4,11 +4,11 @@ import br.com.dbc.domain.model.SessaoDomain;
 
 import java.util.List;
 
-public interface SessaoOutPort {
+public interface SessaoPersistenceOutPort {
 
     List<SessaoDomain> listarSessoes(Long pautaId);
 
-    SessaoDomain salvarSessao(SessaoDomain domain);
+    SessaoDomain salvarSessao(SessaoDomain sessaoDomain);
 
     SessaoDomain consultarSessao(Long sessaoId, Long pautaId);
 

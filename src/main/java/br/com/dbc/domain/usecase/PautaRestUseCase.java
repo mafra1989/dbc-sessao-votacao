@@ -2,9 +2,9 @@ package br.com.dbc.domain.usecase;
 
 import br.com.dbc.domain.exception.ValidationException;
 import br.com.dbc.domain.model.PautaDomain;
-import br.com.dbc.domain.port.input.PautaInPort;
+import br.com.dbc.domain.port.input.PautaRestInPort;
 import br.com.dbc.domain.port.input.ValidacoesInput;
-import br.com.dbc.domain.port.output.PautaOutPort;
+import br.com.dbc.domain.port.output.PautaPersistenceOutPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,17 +12,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class PautaUseCase implements PautaInPort {
+public class PautaRestUseCase implements PautaRestInPort {
 
     @Autowired
-    private PautaOutPort pautaOutPort;
+    private PautaPersistenceOutPort pautaPersistenceOutPort;
 
     @Autowired
     private ValidacoesInput validations;
 
     @Override
     public List<PautaDomain> listarPautas() {
-        return pautaOutPort.listarPautas();
+        return pautaPersistenceOutPort.listarPautas();
     }
 
     @Override
@@ -32,12 +32,12 @@ public class PautaUseCase implements PautaInPort {
             throw new ValidationException("DBC100", result.get().toString());
         }
 
-        return pautaOutPort.salvarPauta(pautaDomain);
+        return pautaPersistenceOutPort.salvarPauta(pautaDomain);
     }
 
     @Override
     public PautaDomain consultarPauta(Long pautaId) {
-        return pautaOutPort.consultarPauta(pautaId);
+        return pautaPersistenceOutPort.consultarPauta(pautaId);
     }
 
 }

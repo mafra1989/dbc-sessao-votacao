@@ -1,7 +1,7 @@
 package br.com.dbc.infrastructure.adapter.output.persistence.adapter;
 
 import br.com.dbc.domain.model.VotoDomain;
-import br.com.dbc.domain.port.output.VotoOutPort;
+import br.com.dbc.domain.port.output.VotoPersistenceOutPort;
 import br.com.dbc.infrastructure.adapter.output.persistence.entity.VotoEntity;
 import br.com.dbc.infrastructure.adapter.output.persistence.mapper.VotoOutputMapper;
 import br.com.dbc.infrastructure.adapter.output.persistence.repository.VotoRepository;
@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-public class VotoPersistenceAdapter implements VotoOutPort {
+public class VotoPersistenceAdapter implements VotoPersistenceOutPort {
 
     @Autowired
     private VotoRepository repository;

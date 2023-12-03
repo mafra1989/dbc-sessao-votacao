@@ -3,7 +3,7 @@ package br.com.dbc.infrastructure.adapter.output.persistence.adapter;
 import br.com.dbc.domain.exception.PautaNotFoundException;
 import br.com.dbc.domain.model.PautaDomain;
 import br.com.dbc.domain.model.enumerators.MensagensNegociosEnum;
-import br.com.dbc.domain.port.output.PautaOutPort;
+import br.com.dbc.domain.port.output.PautaPersistenceOutPort;
 import br.com.dbc.infrastructure.adapter.output.persistence.entity.PautaEntity;
 import br.com.dbc.infrastructure.adapter.output.persistence.mapper.PautaOutputMapper;
 import br.com.dbc.infrastructure.adapter.output.persistence.repository.PautaRepository;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class PautaPersistenceAdapter implements PautaOutPort {
+public class PautaPersistenceAdapter implements PautaPersistenceOutPort {
 
     @Autowired
     private PautaRepository repository;
