@@ -35,5 +35,17 @@ docker ps
 ```
 Para visualizar a documentação Swagger, acesse: http://localhost:8080/swagger-ui.html
 
+## Coleção Postman - Testes na API REST
+Esta coleção do Postman contém todos as requisições básicas para o teste da Api.
+
+## Pré condição
+* Ter o [Postman](https://www.postman.com) instalado na sua máquina
+
+## Como fazer a importação
+1. Após o download deste repositório, abra o Postman
+2. Selecione o menu *File -> Import*
+3. Selecione uma workspace para realizar a importação
+4. Clique no link *files*
+5. Navegue até o diretório do projeto e selecione o arquivo `testes-api-rest-postman-collection.json`
 
 
