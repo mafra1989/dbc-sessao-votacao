@@ -1,5 +1,6 @@
 package br.com.dbc.domain.model;
 
+import br.com.dbc.domain.model.enumerators.VotoEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,21 +38,15 @@ public class SessaoDomain {
         this.pautaDomain = pautaDomain;
     }
 
-    public void changeTotalVotos(Long quantidadeVotos) {
-        this.quantidadeVotos = quantidadeVotos;
-    }
-
-    public void changeTotalVotosSim(Long votosSim) {
-        sim = votosSim;
-    }
-
-    public void changeTotalVotosNao(Long votosNao) {
-        nao = votosNao;
-    }
-
     public Boolean verficaTerminoVotocao() {
         long diff = Duration.between(LocalDateTime.now(), terminoVotacao).getSeconds();
         return diff > 0;
+    }
+
+    public void contabilizarVotos(List<VotoDomain> votos) {
+        quantidadeVotos = votos.stream().count();
+        sim = votos.stream().filter(v -> v.getOpcao().equals(VotoEnum.SIM.getOpcao())).count();
+        nao = votos.stream().filter(v -> v.getOpcao().equals(VotoEnum.NAO.getOpcao())).count();
     }
 
 }
