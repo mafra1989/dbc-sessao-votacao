@@ -1,8 +1,11 @@
 package br.com.dbc.domain.usecase;
 
+import br.com.dbc.domain.exception.PautaNotFoundException;
+import br.com.dbc.domain.exception.SessaoVotacaoAtivaException;
 import br.com.dbc.domain.model.PautaDomain;
 import br.com.dbc.domain.model.SessaoDomain;
 import br.com.dbc.domain.model.VotoDomain;
+import br.com.dbc.domain.model.enumerators.MensagensNegociosEnum;
 import br.com.dbc.domain.model.enumerators.VotoEnum;
 import br.com.dbc.domain.port.input.SessaoRestInPort;
 import br.com.dbc.domain.port.output.PautaPersistenceOutPort;
@@ -53,15 +56,7 @@ public class SessaoRestUseCase implements SessaoRestInPort {
         SessaoDomain sessaoDomain = sessaoPersistenceOutPort.consultarSessao(sessaoId, pautaId);
 
         List<VotoDomain> votos = votoPersistenceOutPort.listarVotosPorSessao(sessaoId);
-
-        long quantidadeVotos = votos.stream().count();
-        sessaoDomain.changeTotalVotos(quantidadeVotos);
-
-        long votosSim = votos.stream().filter(v -> v.getOpcao().equals(VotoEnum.SIM.getOpcao())).count();
-        sessaoDomain.changeTotalVotosSim(votosSim);
-
-        long votosNao = votos.stream().filter(v -> v.getOpcao().equals(VotoEnum.NAO.getOpcao())).count();
-        sessaoDomain.changeTotalVotosNao(votosNao);
+        sessaoDomain.contabilizarVotos(votos);
 
         return sessaoDomain;
     }
@@ -71,6 +66,16 @@ public class SessaoRestUseCase implements SessaoRestInPort {
         pautaPersistenceOutPort.consultarPauta(pautaId);
 
         SessaoDomain sessaoDomain = sessaoPersistenceOutPort.consultarSessao(sessaoId, pautaId);
+
+        List<VotoDomain> votos = votoPersistenceOutPort.listarVotosPorSessao(sessaoId);
+        sessaoDomain.contabilizarVotos(votos);
+
+        Boolean sessaoAtiva = sessaoDomain.verficaTerminoVotocao();
+        if(sessaoAtiva) {
+            throw new SessaoVotacaoAtivaException(
+                    MensagensNegociosEnum.SESSAO_VOTACAO_ATIVA.getCodigo(),
+                    MensagensNegociosEnum.SESSAO_VOTACAO_ATIVA.getMensagem());
+        }
 
         sessaoVotacaoKafkaOutPort.enviarResultado(sessaoDomain);
     }
