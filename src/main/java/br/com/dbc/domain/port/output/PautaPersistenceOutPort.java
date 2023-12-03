@@ -4,7 +4,7 @@ import br.com.dbc.domain.model.PautaDomain;
 
 import java.util.List;
 
-public interface PautaOutPort {
+public interface PautaPersistenceOutPort {
 
     List<PautaDomain> listarPautas();
 

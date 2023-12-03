@@ -13,7 +13,8 @@ public enum MensagensNegociosEnum {
     PAUTA_NAO_ENCONTRADA("DBC010","Pauta não encontrada."),
     SESSAO_NAO_ENCONTRADA("DBC020","Sessão não encontrada."),
     VOTO_CPF_EXISTENTE_NA_PAUTA("DBC030","Voto com cpf existente na pauta."),
-    TEMPO_VOTACAO_EXCEDIDO("DBC040","Tempo de votação excedido.");
+    TEMPO_VOTACAO_EXCEDIDO("DBC040","Tempo de votação excedido."),
+    SESSAO_VOTACAO_ATIVA("DBC050","Não foi possível realizar o envio do resultado, sessão de votação em andamento.");
 
     private final String codigo;
     private final String mensagem;
